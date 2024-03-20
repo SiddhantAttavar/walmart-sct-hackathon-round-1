@@ -1,0 +1,10 @@
+The algorithm we used for our submission is a combination of 2 well-known algorithms:
+- If number of nodes in the graph was <= 20:
+	- We used the dynamic programming solution for the travelling salesman problem
+	- Time complexity: O(n^n * 2^n)
+	- Space complexity: O(n * 2^n)
+- Otherwise (for part 5):
+	- We constructed a minimum spanning tree of the graph using Prim's algorithm
+	  We approximated the ideal Hamiltonian circuit as the pre-order traversal of the MST with a loop back to the starting point
+	- Time complexity: O(n^2 * log(n))
+	- Space complexity: O(n^2)
