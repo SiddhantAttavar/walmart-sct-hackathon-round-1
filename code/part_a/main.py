@@ -55,6 +55,9 @@ def main(in_file_name, out_file_name):
 		for j in range(i + 1, num_nodes):
 			dist[i][j] = dist[j][i] = haversine(*locs[i], *locs[j])
 	
+	for i in dist:
+		print(*i)
+	
 	# Compute travelling salesman
 	memo = [[-1] * (1 << num_nodes) for _ in range(num_nodes)]
 	par = [[(-1, -1)] * (1 << num_nodes) for _ in range(num_nodes)]
