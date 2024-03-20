@@ -18,7 +18,7 @@ for f, file in enumerate(input_files):
         ans = dsu_main(input_path + file, output_path + file.replace("input", "output"))
 
     min_dist, res = ans
-    permutations[f] = res
+    permutations[f] = [i for i in res if i]
     min_dists[f] = min_dist
 
     print(f"File {file} done. Min dist: {min_dist}")
