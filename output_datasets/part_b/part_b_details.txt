@@ -1,0 +1,10 @@
+We noticed that if the graph has N nodes and the maximum capacity of the vehicle is M
+N - M <= No. of nodes visited by a vehicle <= M (this is only true for 2 vehicles)
+
+We generate all subsets of the nodes that lie within this range and compute their optimal traversal
+When we divide the nodes into two partitions (one for each vehicle) we can compute the total cost as the sum of optimal TSP circuits in each of these partitions. We do the computation using our optimised Prim's algorithm
+
+If we compute this cost for all pairs of complementary subsets and take the minimum, we have our solution for the minimum cost path
+
+- Time complexity: O(2^n * n^2 log(n))
+- Space complexity: O(2^n)
