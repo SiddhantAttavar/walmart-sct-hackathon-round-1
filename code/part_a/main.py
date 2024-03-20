@@ -1,7 +1,6 @@
 import numpy as np
 from csv import DictReader
 from sys import argv
-from functools import cache
 
 def haversine(lat1, lon1, lat2, lon2):
 	R = 6371 # radius of Earth in kilometers
@@ -13,9 +12,24 @@ def haversine(lat1, lon1, lat2, lon2):
 	res = R * (2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a)))
 	return np.round(res, 2)
 
-def tsp(i, m, memo, dist):
-	if m == ((1 << i) | 3):
-		return dist[0]
+def tsp(i, m, memo, par, dist):
+	if m == ((1 << i) | 1):
+		par[i][m] = 0, 0
+		return dist[0][i]
+
+	if memo[i][m] != -1:
+		return memo[i][m]
+
+	res = float('inf'), (-1, -1)
+	n = len(dist)
+	for j in range(1, n):
+		if (m & (1 << j)) != 0 and j != i:
+			nm = m & (~(1 << i))
+			res = min(res, (tsp(j, nm, memo, par, dist) + dist[i][j], (j, nm)))
+	
+	# print(i, m, res)
+	memo[i][m], par[i][m] = res
+	return memo[i][m]
 
 def main(in_file_name, out_file_name):
 	# Take input
@@ -41,14 +55,19 @@ def main(in_file_name, out_file_name):
 		for j in range(i + 1, num_nodes):
 			dist[i][j] = dist[j][i] = haversine(*locs[i], *locs[j])
 	
-	for i in dist:
-		print(*i)
-	
 	# Compute travelling salesman
 	memo = [[-1] * (1 << num_nodes) for _ in range(num_nodes)]
-	min_dist = float('inf')
-	for i in range(n):
-		pass
+	par = [[(-1, -1)] * (1 << num_nodes) for _ in range(num_nodes)]
+	m = (1 << num_nodes) - 1
+	min_dist, u = min((tsp(i, m, memo, par, dist) + dist[0][i], i) for i in range(num_nodes))
+
+	res = [u]
+	while u > 0:
+		u, m = par[u][m]
+		res.append(u)
+
+	print(min_dist)
+	print(res)
 	
 if __name__ == '__main__':
 	assert(len(argv) == 3)
